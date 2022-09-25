@@ -1,0 +1,61 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "width": 600,
+    "height": 450,
+    "title": "Australian bushfires in 2019 between August and Septemer",
+    "projection": {"type": "mercator"},
+    "layer": [
+    {
+    "data": {
+    "url":
+    "https://raw.githubusercontent.com/Hassan-Almahdawi/fit3179/main/ne_10m_coastline%20(1).json",
+    "format": {"type": "topojson", "feature":
+    "ne_10m_coastline"}
+    },
+    "mark": {"type": "geoshape", "fill": "lightgray", "stroke":
+    "white"}
+    
+    },
+    {
+        "params":[
+            {
+            "name": "brightness_highlight",
+            "select": {"type": "point", "fields": ["brightness"]},
+            "bind": "legend"
+            }
+            ],
+        "data": {
+        "url":
+        "https://raw.githubusercontent.com/Hassan-Almahdawi/fit3179/main/bushfiredata.csv"
+        },
+        "mark": {"type": "circle", "tooltip": {"content": "data"}},
+        "encoding": {
+        "longitude": {"field": "longitude", "type":
+        "quantitative"},
+        "latitude": {"field": "latitude", "type":
+        "quantitative"},
+        "size": {
+        "field": "brightness",
+        "type": "quantitative",
+        "scale": {"domain": [350, 500]}
+        },
+        "color": {
+        "field": "brightness",
+        "type": "quantitative",
+        "title": "Fire brightness (cd)",
+        "scale": {"scheme": "reds","domain": [350, 500]}
+        },
+        "tooltip": [
+            {"field": "latitude", "type": "quantitative", "format": ".4f"},
+            {"field": "longitude", "type": "quantitative", "format": ".4f"},
+            {"field": "brightness", "type": "quantitative", "format": ".1f"},
+            {"field": "acq_date","title": "date", "type": "ordinal"}
+            ],
+        "opacity": {
+            "condition": {"param": "brightness_highlight", "value": 1},
+            "value": 0.2
+        }
+        }
+        }
+        ]
+        }
