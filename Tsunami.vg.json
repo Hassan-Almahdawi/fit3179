@@ -1,0 +1,152 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "width": 800,
+    "height": 600,
+    "title": "Tsunami Statistics from 2000 to 2017",
+    "data": {
+      "url": "https://raw.githubusercontent.com/Hassan-Almahdawi/fit3179/main/TsunameData_scatter.csv"
+    },
+    "params": [
+      {
+        "name": "Wave_Height",
+        "value": 0,
+        "bind": {
+          "input": "range",
+          "min": 0,
+          "max": 40,
+          "step": 5,
+          "name": "Wave Height: "
+        }
+      },
+      {
+        "name": "Continent_selection",
+        "bind": {
+          "input": "select",
+          "options": [
+            null,
+            "North America",
+            "South America",
+            "Europe",
+            "Africa",
+            "Asia",
+            "Oceania",
+            "Australia"
+          ],
+          "labels": [
+            "Show All",
+            "North America",
+            "South America",
+            "Europe",
+            "Africa",
+            "Asia",
+            "Oceania",
+            "Australia"
+          ],
+          "name": "Continent Selection: "
+        }
+      }
+    ],
+      "transform": [
+      {"filter": "datum.ALL_FATALITIES > 0"},
+      {"filter": "datum.ALL_HOUSES_DESTROYED > 0"},
+      {"filter": "datum.MAXIMUM_HEIGHT > Wave_Height"},
+      {
+        "filter": "Continent_selection == null || datum.Contenient==Continent_selection"
+      }
+    ],
+    "encoding": {
+      "x": {
+        "field": "ALL_FATALITIES",
+        "type": "quantitative",
+        "title": "Deaths",
+        "axis": {"tickCount": 5},
+        "scale": {"type": "log","domain": [1, 100000]}
+      },
+      "y": {
+        "field": "ALL_HOUSES_DESTROYED",
+        "type": "quantitative",
+        "title": "Home Destroyed",
+        "axis": {"tickCount": 5},
+        "scale": {"type": "log","domain": [1, 100000]}
+      }
+    },
+    "layer": [
+      {
+        "mark": "circle",
+        "encoding": {
+          "size": {
+            "field": "MAXIMUM_HEIGHT",
+            "type": "quantitative",
+            "title": "Wave Height (m)",
+            "scale": {"domain": [0,10]}
+              
+            ,
+            "legend": {"format": ".1s"}
+          },
+          "color": {
+            "field": "Contenient",
+            "type": "nominal",
+            "scale": {
+              "domain": [
+                "North America",
+                "South America",
+                "Europe",
+                "Africa",
+                "Asia",
+                "Oceania",
+                "Australia"
+              ],
+              "range": [
+                "#e41a1c",
+                "#984ea3",
+                "#ff7f00",
+                "#a6cee3",
+                "#377eb8",
+                "#a65628",
+                "#66c2a5"
+              ]
+            }
+          },
+          "opacity": {"value": 0.6},
+          "tooltip": [
+            {"field": "COUNTRY", "type": "nominal", "title": "Country"},
+            {"field": "Contenient", "type": "nominal"},
+            {"field": "YEAR", "type": "ordinal", "title": "Year"},
+            {"field": "MAXIMUM_HEIGHT", "type": "quantitative", "format": ",", "title": "Maximum Height"},
+            {"field": "ALL_FATALITIES", "type": "quantitative", "format": ",", "title": "Deaths"},
+            {"field": "ALL_HOUSES_DESTROYED", "type": "quantitative", "format": ",", "title":"House Destroyed"}
+  
+          ]
+        }
+      },
+      {
+        "mark": {
+          "type": "text",
+          "align": "right",
+          "baseline": "middle",
+          "dx": -12,
+          "fontSize": 11.5,
+          "fontStyle": "italic"
+        },
+        "encoding": {
+          "text": {"field": "COUNTRY", "type": "nominal"},
+          "color": {"value": "black"},
+          "opacity": {
+            "condition": {
+              "test": "datum['ALL_FATALITIES'] > 1500",
+              "value": 1
+            },
+            "value": 0
+          },
+          "tooltip": [
+            {"field": "COUNTRY", "type": "nominal", "title": "Country"},
+            {"field": "Contenient", "type": "nominal"},
+            {"field": "YEAR", "type": "ordinal", "title": "Year"},
+            {"field": "MAXIMUM_HEIGHT", "type": "quantitative", "format": ",", "title": "Maximum Height"},
+            {"field": "ALL_FATALITIES", "type": "quantitative", "format": ",", "title": "Deaths"},
+            {"field": "ALL_HOUSES_DESTROYED", "type": "quantitative", "format": ",", "title":"House Destroyed"}
+          ]
+        }
+      }
+    ]
+  }
